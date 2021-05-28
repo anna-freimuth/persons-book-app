@@ -7,7 +7,7 @@ const Persons = () => {
 
     const renderPersons = () => {
         if ( !persons.length ) {
-            return (<div>Ups ...</div>)
+            return (<div>There is no persons yet...</div>)
         }
         return persons.map(person => (<PersonCard key={person.id} person={person} />))
     }

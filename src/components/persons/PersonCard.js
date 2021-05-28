@@ -1,9 +1,11 @@
 import React from "react"
+import {useHistory} from "react-router-dom";
 
 const PersonCard = ({person}) => {
+    let history = useHistory();
     const clickHandle = event => {
         event.preventDefault()
-        console.log( person.id )
+        history.push(`/persons/${person.id}`)
     }
     return (
         <div className="col-6 col-sm-4 col-md-3">
