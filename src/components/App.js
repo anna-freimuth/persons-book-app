@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import personsInitial, {setPersonsToStorage,activePersonId,setActivePersonIdToStorage} from "../data/persons";
+import personsInitial, {setPersonsToStorage, activePersonId, setActivePersonIdToStorage} from "../data/persons";
 import Navigation from "./Navigation";
 import Pages from "../layouts/Pages";
 import albumsInitial, {setAlbumsToStorage} from '../data/albums'
@@ -20,7 +20,7 @@ const App = () => {
     const editPerson = person => {
         const newPersons = [...persons]
         const idx = newPersons.findIndex(p => p.id === person.id)
-        if ( idx === -1 ) return false
+        if (idx === -1) return false
         newPersons.splice(idx, 1, person)
         setPersons(newPersons)
         setPersonsToStorage(newPersons)
@@ -33,7 +33,7 @@ const App = () => {
 
     const getPersonById = (id) => {
         const idx = persons.findIndex(person => person.id === +id)
-        if ( idx === -1 ) {
+        if (idx === -1) {
             return null
         }
         return persons[idx]
@@ -43,7 +43,7 @@ const App = () => {
 
     const addNewAlbum = formData => {
         const newAlbums = [...albums, {...formData, id: Date.now()}]
-        setAlbums( newAlbums )
+        setAlbums(newAlbums)
         setAlbumsToStorage(newAlbums)
 
     }
@@ -56,6 +56,29 @@ const App = () => {
         setPhotosToStorage(newPhotos)
     }
 
+    const doesPhotoBelongToActivePerson = (photo) => {
+        const album = albums.find(album => album.id === photo.albumId);
+        return album.personId === activePerson;
+    }
+
+    const likeRating = (id) => {
+        const arr = [...photos]
+        const index = arr.findIndex(photo => photo.id === id)
+        if (index !== -1 && !doesPhotoBelongToActivePerson(arr[index])) {
+            arr[index].like += 1;
+        }
+        setPhotos(arr)
+    }
+    const dislikeRating = (id) => {
+        const arr = [...photos]
+        const index = arr.findIndex(photo => photo.id === id)
+        if (index !== -1 && !doesPhotoBelongToActivePerson(arr[index])) {
+            arr[index].dislike += 1;
+        }
+        setPhotos(arr)
+    }
+
+
     return (
         <GlobalContext.Provider value={{
             addPerson,
@@ -67,10 +90,12 @@ const App = () => {
             albums,
             addNewAlbum,
             photos,
-            addNewPhoto
+            addNewPhoto,
+            likeRating,
+            dislikeRating
         }}>
-            <Navigation />
-            <Pages />
+            <Navigation/>
+            <Pages/>
         </GlobalContext.Provider>
     )
 }
