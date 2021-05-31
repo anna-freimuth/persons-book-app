@@ -1,13 +1,16 @@
 import React, {Fragment, useContext, useEffect, useState} from "react"
 import {useParams} from 'react-router-dom'
 import {GlobalContext} from "../App"
+import AddAlbum from "../albums/AddAlbum";
+import PersonalAlbums from "../albums/PersonalAlbums";
 
 const PersonProfile = () => {
 
     const {id} = useParams()
-    const {getPersonById, activePerson, editPerson} = useContext(GlobalContext)
+    const {getPersonById, activePerson, editPerson,addNewAlbum} = useContext(GlobalContext)
     const [person, setPerson] = useState(null)
     const [editMode, setEditMode ] =useState(false)
+    const [addAlbum, setAddAlbum] = useState(false)
 
     useEffect(() => {
         setPerson(getPersonById(id))
@@ -17,7 +20,7 @@ const PersonProfile = () => {
         if (!person) return false
         return (
             <div className="container">
-                <div className="card w-25">
+                <div className="card w-100">
                     { editMode ? renderForm() : renderInfo() }
                 </div>
                 {renderEditButton()}
@@ -86,10 +89,11 @@ const PersonProfile = () => {
     }
 
     const renderEditButton = () => {
-        if ( activePerson !== person.id || editMode ) return null
+        if ( activePerson !== person.id || editMode || addAlbum) return null
         return (
-            <div className="w-25">
-                <button onClick={editButtonHandle} className="w-100 btn btn-success">Edit</button>
+            <div className="w-100">
+                <button onClick={editButtonHandle} className="w-100 btn btn-success my-2">Edit</button>
+                <button onClick={addAlbumButtonHandle} className="w-100 btn btn-info">Add Album</button>
             </div>
         )
     }
@@ -99,8 +103,41 @@ const PersonProfile = () => {
         setEditMode(true)
     }
 
+    const addAlbumButtonHandle = event => {
+        event.preventDefault()
+        setAddAlbum(true)
+    }
+
+    const addNewAlbumHandle = formData => {
+        addNewAlbum(formData)
+        setAddAlbum(false)
+    }
+
+    const renderPersonInfo = () => {
+
+
+        if ( addAlbum ) {
+            return (<AddAlbum onFinish={addNewAlbumHandle} />)
+        }
+
+        return (<div>
+            <PersonalAlbums personId={+id} />
+        </div>)
+
+    }
+
     return (
-        <div>{renderProfile()}</div>
+        <section className="container">
+            <div className="row">
+                <div className="col-6 col-sm-4">
+                    {renderProfile()}
+                </div>
+                <div className="col-6 col-sm-8">
+                    {renderPersonInfo()}
+                </div>
+            </div>
+
+        </section>
     )
 }
 
