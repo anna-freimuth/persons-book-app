@@ -68,6 +68,7 @@ const App = () => {
             arr[index].like += 1;
         }
         setPhotos(arr)
+        setPhotosToStorage(photos)
     }
     const dislikeRating = (id) => {
         const arr = [...photos]
@@ -76,6 +77,7 @@ const App = () => {
             arr[index].dislike += 1;
         }
         setPhotos(arr)
+        setPhotosToStorage(photos)
     }
 
 
