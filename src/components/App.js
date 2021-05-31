@@ -58,26 +58,27 @@ const App = () => {
 
     const doesPhotoBelongToActivePerson = (photo) => {
         const album = albums.find(album => album.id === photo.albumId);
+        if (album === undefined) return false;
         return album.personId === activePerson;
     }
 
     const likeRating = (id) => {
         const arr = [...photos]
-        const index = arr.findIndex(photo => photo.id === id)
-        if (index !== -1 && !doesPhotoBelongToActivePerson(arr[index])) {
-            arr[index].like += 1;
+        const photo = arr.find(photo => photo.id === id)
+        if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
+            photo.like += 1;
         }
         setPhotos(arr)
-        setPhotosToStorage(photos)
+        setPhotosToStorage(arr)
     }
     const dislikeRating = (id) => {
         const arr = [...photos]
-        const index = arr.findIndex(photo => photo.id === id)
-        if (index !== -1 && !doesPhotoBelongToActivePerson(arr[index])) {
-            arr[index].dislike += 1;
+        const photo = arr.find(photo => photo.id === id)
+        if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
+            photo.dislike += 1;
         }
         setPhotos(arr)
-        setPhotosToStorage(photos)
+        setPhotosToStorage(arr)
     }
 
 
