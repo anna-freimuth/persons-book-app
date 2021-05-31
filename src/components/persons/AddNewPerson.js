@@ -25,7 +25,7 @@ const AddNewPerson = () => {
     const submitHandle = event => {
         event.preventDefault()
         cnt.addPerson(formData)
-        history.push('/')
+        history.push('/persons')
     }
 
     return (

@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import personsInitial, {setPersonsToStorage,activePersonId,setActivePersonIdToStorage} from "../data/persons";
 import Navigation from "./Navigation";
 import Pages from "../layouts/Pages";
+import albumsInitial, {setAlbumsToStorage} from '../data/albums'
+import photosInitial, {setPhotosToStorage} from '../data/photos'
 
 export const GlobalContext = React.createContext(null)
 
@@ -37,6 +39,23 @@ const App = () => {
         return persons[idx]
     }
 
+    const [albums, setAlbums] = useState(albumsInitial)
+
+    const addNewAlbum = formData => {
+        const newAlbums = [...albums, {...formData, id: Date.now()}]
+        setAlbums( newAlbums )
+        setAlbumsToStorage(newAlbums)
+
+    }
+
+    const [photos, setPhotos] = useState(photosInitial)
+
+    const addNewPhoto = formData => {
+        const newPhotos = [...photos, {...formData, id: Date.now(), like: 0, dislike: 0}]
+        setPhotos(newPhotos)
+        setPhotosToStorage(newPhotos)
+    }
+
     return (
         <GlobalContext.Provider value={{
             addPerson,
@@ -44,7 +63,11 @@ const App = () => {
             getPersonById,
             activePerson,
             changeActivePerson,
-            editPerson
+            editPerson,
+            albums,
+            addNewAlbum,
+            photos,
+            addNewPhoto
         }}>
             <Navigation />
             <Pages />
