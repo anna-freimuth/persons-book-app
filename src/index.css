@@ -23,3 +23,30 @@ code {
 .nav-item a:hover, .nav-item a.active {
   color: #fff;
 }
+
+.cur-pointer {
+  cursor: pointer;
+}
+
+.w-100.btn.btn-info.mb-2{
+  background-color:#1A56B0;
+  color: white;
+}
+.w-100.btn.btn-success.my-2{
+  background-color: #FC3F26;
+}
+
+.btn.btn-primary.w-100{
+  background-color:#1A56B0;
+}
+.card-img-top{
+  border-radius: 5%
+}
+.card{
+  border-radius:5%;
+}
+.card.w-100{
+  background-color:#1A56B0;
+  color:whitesmoke;
+  font-family: "Noto Sans";
+}
