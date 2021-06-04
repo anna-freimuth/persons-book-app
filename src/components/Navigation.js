@@ -1,13 +1,9 @@
-import React,{useContext} from 'react'
+import React from 'react'
 import {NavLink} from "react-router-dom";
-import {GlobalContext} from "./App";
+import SelectActivePerson from "./persons/SelectActivePerson"
 
 const Navigation = () => {
-    const {persons, changeActivePerson, activePerson} = useContext(GlobalContext)
 
-    const changeSelectValue = event => {
-        changeActivePerson(event.target.value)
-    }
     return (
 
         <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
@@ -26,9 +22,7 @@ const Navigation = () => {
                         <NavLink to="/albums">Albums</NavLink>
                     </li>
                 </ul>
-                <select onChange={changeSelectValue} defaultValue={activePerson}>
-                    {persons.map( p => (<option key={p.id} value={p.id}>{p.fName} {p.lName}</option>) )}
-                </select>
+               <SelectActivePerson />
             </div>
 
         </nav>

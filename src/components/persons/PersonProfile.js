@@ -1,5 +1,6 @@
 import React, {Fragment, useContext, useEffect, useState} from "react"
 import {useParams} from 'react-router-dom'
+import {connect} from "react-redux";
 import {GlobalContext} from "../App"
 import AddAlbum from "../albums/AddAlbum";
 import PersonalAlbums from "../albums/PersonalAlbums";
@@ -7,12 +8,13 @@ import AddPost from "../posts/AddPost"
 import PersonalBlog from "../posts/PersonalBlog"
 
 
-const PersonProfile = () => {
+
+const PersonProfile = ({activePerson}) => {
 
     const {id} = useParams()
-    const {getPersonById, activePerson, editPerson,addNewAlbum, addNewPost} = useContext(GlobalContext)
+    const {getPersonById, editPerson, addNewAlbum, addNewPost} = useContext(GlobalContext)
     const [person, setPerson] = useState(null)
-    const [editMode, setEditMode ] =useState(false)
+    const [editMode, setEditMode] = useState(false)
     const [addAlbum, setAddAlbum] = useState(false)
     const [addPost, setAddPost] = useState(false)
 
@@ -25,7 +27,7 @@ const PersonProfile = () => {
         return (
             <div className="container">
                 <div className="card w-100">
-                    { editMode ? renderForm() : renderInfo() }
+                    {editMode ? renderForm() : renderInfo()}
                 </div>
                 {renderEditButton()}
             </div>
@@ -41,27 +43,33 @@ const PersonProfile = () => {
             <form onSubmit={submitFormHandle}>
                 <div className="form-group">
                     <label>First Name</label>
-                    <input type="text" className="form-control" value={person.fName} name="fName" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.fName} name="fName"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <div className="form-group">
                     <label>Last Name</label>
-                    <input type="text" className="form-control" value={person.lName} name="lName" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.lName} name="lName"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <div className="form-group">
                     <label>Age</label>
-                    <input type="text" className="form-control" value={person.age} name="age" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.age} name="age"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <div className="form-group">
                     <label>Email</label>
-                    <input type="text" className="form-control" value={person.email} name="email" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.email} name="email"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <div className="form-group">
                     <label>Phone</label>
-                    <input type="text" className="form-control" value={person.phone} name="phone" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.phone} name="phone"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <div className="form-group mb-2">
                     <label>Avatar</label>
-                    <input type="text" className="form-control" value={person.avatar} name="avatar" onChange={changeFieldHandle}/>
+                    <input type="text" className="form-control" value={person.avatar} name="avatar"
+                           onChange={changeFieldHandle}/>
                 </div>
                 <button type="submit">Save Change</button>
             </form>
@@ -71,7 +79,7 @@ const PersonProfile = () => {
     const renderInfo = () => {
         return (
             <Fragment>
-                <img src={person.avatar} className="card-img-top" alt="{person.fName} {person.lName}" />
+                <img src={person.avatar} className="card-img-top" alt="{person.fName} {person.lName}"/>
                 <div className="card-body">
                     <h3 className="card-title">
                         {person.fName} {person.lName}
@@ -93,7 +101,7 @@ const PersonProfile = () => {
     }
 
     const renderEditButton = () => {
-        if ( activePerson !== person.id || editMode || addAlbum || addPost) return null
+        if (activePerson !== person.id || editMode || addAlbum || addPost) return null
         return (
             <div className="w-100">
                 <button onClick={editButtonHandle} className="w-100 btn btn-success my-2">Edit</button>
@@ -129,11 +137,11 @@ const PersonProfile = () => {
     }
 
     const renderPersonInfo = () => {
-        if ( addAlbum ) {
-            return (<AddAlbum onFinish={addNewAlbumHandle} />)
+        if (addAlbum) {
+            return (<AddAlbum onFinish={addNewAlbumHandle}/>)
         }
         if (addPost) {
-            return <AddPost onFinish={addNewPostHandle} />;
+            return <AddPost onFinish={addNewPostHandle}/>;
         }
 
         return (<div>
@@ -158,4 +166,14 @@ const PersonProfile = () => {
     )
 }
 
-export default PersonProfile
+const mapStateToProps = state => {
+    return {
+        activePerson: state.persons.activePerson
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PersonProfile)
