@@ -1,8 +1,10 @@
-import React, {useState, useContext} from 'react'
+import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
-import {GlobalContext} from "../App";
 
-const AddNewPerson = () => {
+import {ADD_NEW_PERSON} from "../../store/typesList";
+import {connect} from "react-redux";
+
+const AddNewPerson = ({addNewPerson}) => {
 
     const [formData, setFormData] = useState({
         fName: '',
@@ -13,7 +15,7 @@ const AddNewPerson = () => {
         avatar: ''
     })
 
-    const cnt = useContext(GlobalContext)
+
     let history = useHistory()
 
     const changeFieldHandle = event => {
@@ -24,7 +26,7 @@ const AddNewPerson = () => {
 
     const submitHandle = event => {
         event.preventDefault()
-        cnt.addPerson(formData)
+        addNewPerson(formData)
         history.push('/persons')
     }
 
@@ -64,5 +66,9 @@ const AddNewPerson = () => {
         </div>
     )
 }
-
-export default AddNewPerson
+const mapDispatchToProps=(dispatch)=>{
+    return {
+        addNewPerson:(person)=> dispatch({type: ADD_NEW_PERSON,payload:person})
+    }
+}
+export default connect(null, mapDispatchToProps)(AddNewPerson)

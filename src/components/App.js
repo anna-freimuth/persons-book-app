@@ -1,10 +1,12 @@
 import React, {useState} from 'react'
 import personsInitial, {setPersonsToStorage, activePersonId, setActivePersonIdToStorage} from "../data/persons";
-import Navigation from "./Navigation";
-import Pages from "../layouts/Pages";
 import albumsInitial, {setAlbumsToStorage} from '../data/albums'
 import photosInitial, {setPhotosToStorage} from '../data/photos'
 import postsInitial, {setPostsToStorage} from "../data/posts"
+
+import Navigation from "./Navigation";
+import Pages from "../layouts/Pages";
+
 
 export const GlobalContext = React.createContext(null)
 
@@ -99,13 +101,14 @@ const App = () => {
         setPostsToStorage(newPosts)
     };
 
+
     return (
         <GlobalContext.Provider value={{
-            addPerson,
-            persons,
+            // addPerson,
+            // persons,
             getPersonById,
-            activePerson,
-            changeActivePerson,
+            // activePerson,
+            // changeActivePerson,
             editPerson,
             albums,
             addNewAlbum,
@@ -123,5 +126,7 @@ const App = () => {
         </GlobalContext.Provider>
     )
 }
+
+
 
 export default App
