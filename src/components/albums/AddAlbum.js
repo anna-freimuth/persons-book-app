@@ -24,7 +24,7 @@ const AddAlbum = ({onFinish}) => {
                 <input type="text" className="form-control" name="title" onChange={changeHandle}/>
             </div>
             <div className="form-group">
-                <button type="submit" className="btn btn-primary w-100">Add</button>
+                <button type="submit" className="btn btn-primary w-100 ">Add</button>
             </div>
         </form>
     )

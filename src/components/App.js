@@ -4,6 +4,7 @@ import Navigation from "./Navigation";
 import Pages from "../layouts/Pages";
 import albumsInitial, {setAlbumsToStorage} from '../data/albums'
 import photosInitial, {setPhotosToStorage} from '../data/photos'
+import postsInitial, {setPostsToStorage} from "../data/posts"
 
 export const GlobalContext = React.createContext(null)
 
@@ -56,6 +57,14 @@ const App = () => {
         setPhotosToStorage(newPhotos)
     }
 
+    const getAlbumById = id => {
+        const idx = albums.findIndex(album => album.id === id)
+        if (idx === -1) {
+            return null
+        }
+        return albums[idx]
+    }
+
     const doesPhotoBelongToActivePerson = (photo) => {
         const album = albums.find(album => album.id === photo.albumId);
         if (album === undefined) return false;
@@ -82,6 +91,14 @@ const App = () => {
     }
 
 
+    const [posts, setPosts] = useState(postsInitial);
+
+    const addNewPost = (formData) => {
+        const newPosts = [...posts, {...formData, id: Date.now(), datetime: Date.now()}]
+        setPosts(newPosts)
+        setPostsToStorage(newPosts)
+    };
+
     return (
         <GlobalContext.Provider value={{
             addPerson,
@@ -95,7 +112,11 @@ const App = () => {
             photos,
             addNewPhoto,
             likeRating,
-            dislikeRating
+            dislikeRating,
+            getAlbumById,
+            posts,
+            addNewPost
+
         }}>
             <Navigation/>
             <Pages/>

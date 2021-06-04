@@ -22,7 +22,9 @@ const Navigation = () => {
                     <li className="nav-item">
                         <NavLink to="/persons/add">Add Person</NavLink>
                     </li>
-
+                    <li className="nav-item">
+                        <NavLink to="/albums">Albums</NavLink>
+                    </li>
                 </ul>
                 <select onChange={changeSelectValue} defaultValue={activePerson}>
                     {persons.map( p => (<option key={p.id} value={p.id}>{p.fName} {p.lName}</option>) )}
