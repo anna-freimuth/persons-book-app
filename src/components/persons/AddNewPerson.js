@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
-
-import {ADD_NEW_PERSON} from "../../store/typesList";
 import {connect} from "react-redux";
+import {addNewPerson} from "../../store/actions/persons";
 
 const AddNewPerson = ({addNewPerson}) => {
 
@@ -66,9 +65,9 @@ const AddNewPerson = ({addNewPerson}) => {
         </div>
     )
 }
-const mapDispatchToProps=(dispatch)=>{
+const mapDispatchToProps = (dispatch) => {
     return {
-        addNewPerson:(person)=> dispatch({type: ADD_NEW_PERSON,payload:person})
+        addNewPerson: (person) => dispatch(addNewPerson(person))
     }
 }
 export default connect(null, mapDispatchToProps)(AddNewPerson)

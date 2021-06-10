@@ -1,26 +1,22 @@
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {CHANGE_ACTIVE_PERSON, FETCH_PERSONS} from "../../store/typesList";
-import personsInitial, {activePersonId, setActivePersonIdToStorage} from "../../data/persons";
+import {changeActivePersonId, getPersons} from "../../store/actions/persons"
 
 const SelectActivePerson = ({persons, activePerson, getPersonsObject, changeActivePerson}) => {
 
     useEffect(() => {
-        const obj = {
-            list: personsInitial,
-            activePerson: +activePersonId
-        }
-        getPersonsObject(obj)
+        getPersonsObject()
     }, []);
 
 
     const changeSelectValue = event => {
-        changeActivePerson(event.target.value)
-        setActivePersonIdToStorage(event.target.value)
+        changeActivePerson(+event.target.value)
+
     }
 
     return (
         <select onChange={changeSelectValue} defaultValue={activePerson}>
+            <option value="-1">Choose a user</option>
             {persons.map(p => (<option key={p.id} value={p.id}>{p.fName} {p.lName}</option>))}
         </select>
     )
@@ -35,8 +31,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getPersonsObject: personsObject => dispatch({type: FETCH_PERSONS, payload: personsObject}),
-        changeActivePerson: newId => dispatch({type: CHANGE_ACTIVE_PERSON, payload: newId}),
+        getPersonsObject: () => dispatch(getPersons()),
+        changeActivePerson: newId => dispatch(changeActivePersonId(newId))
     }
 }
 
