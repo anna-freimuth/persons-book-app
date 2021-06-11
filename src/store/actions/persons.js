@@ -1,4 +1,11 @@
-import {ADD_NEW_PERSON, CHANGE_ACTIVE_PERSON, FETCH_PERSONS} from "../typesList";
+import {
+    ADD_NEW_PERSON,
+    CHANGE_ACTIVE_PERSON,
+    FETCH_PERSONS,
+    DELETE_PERSON,
+    EDIT_PERSON,
+    SET_PERSON_BY_ID
+} from "../typesList";
 import personsInitial, {activePersonId, setActivePersonIdToStorage, setPersonsToStorage} from "../../data/persons";
 
 export const changeActivePersonId = personId => {
@@ -9,6 +16,7 @@ export const changeActivePersonId = personId => {
         } catch (err) {
             console.log(err.message)
         }
+
     }
 }
 
@@ -16,7 +24,6 @@ export const getPersons = () => {
     return dispatch => {
         try {
             const obj = getObj()
-
             dispatch(fetchPersons(obj))
         } catch (e) {
             console.log(e.message)
@@ -25,13 +32,52 @@ export const getPersons = () => {
 }
 
 export const addNewPerson = data => {
-    return dispatch => {
+    return async dispatch => {
         try {
-            const person = createPerson(data)
-
+            const person = await createPerson(data)
+            await dispatch(addPerson(person))
         } catch (e) {
             console.log(e.message)
         }
+    }
+}
+
+export const deletePerson = personId => {
+    return async dispatch => {
+        try {
+            await deleteFromServer(personId)
+            await dispatch(deletePersonFromState(personId))
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+}
+
+export const editPerson = person => {
+    return async dispatch => {
+        try {
+            await editPersonInServer(person)
+            await dispatch(editPersonInState(person))
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+}
+
+export const setPersonById = personId => {
+    return dispatch => {
+        try {
+            dispatch(setPersonByIdInState(personId))
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+}
+
+const setPersonByIdInState = personId => {
+    return {
+        type: SET_PERSON_BY_ID,
+        payload: personId
     }
 }
 
@@ -42,12 +88,13 @@ const setActivePerson = personId => {
     }
 }
 
-const fetchPersons = (obj) => {
+const fetchPersons = obj => {
     return {
         type: FETCH_PERSONS,
         payload: obj
     }
 }
+
 const addPerson = person => {
     return {
         type: ADD_NEW_PERSON,
@@ -55,6 +102,20 @@ const addPerson = person => {
     }
 }
 
+const editPersonInState = person => {
+    return {
+        type: EDIT_PERSON,
+        payload: person
+    }
+}
+
+
+const deletePersonFromState = personId => {
+    return {
+        type: DELETE_PERSON,
+        payload: personId
+    }
+}
 
 //Server emulations
 
@@ -69,9 +130,23 @@ const createPerson = data => {  //imitation of server's work , normally here is 
     return newPerson
 }
 
+const editPersonInServer = person => {
+    const idx = personsInitial.findIndex(p => p.id === person.id)
+    if (idx === -1) return null
+    personsInitial.splice(idx, 1, person)
+    setPersonsToStorage(personsInitial)
+}
+
 const getObj = () => {
     return {
         list: personsInitial,
         activePerson: +activePersonId
     }
+}
+
+const deleteFromServer = personId => {
+    const idx = personsInitial.findIndex(p => p.id === personId)
+    if (idx === -1) return null
+    personsInitial.splice(idx, 1)
+    setPersonsToStorage(personsInitial)
 }

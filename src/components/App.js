@@ -1,46 +1,20 @@
-import React, {useState} from 'react'
-import personsInitial, {setPersonsToStorage, activePersonId, setActivePersonIdToStorage} from "../data/persons";
+import React, {useEffect, useState} from 'react'
+import {connect} from "react-redux"
+
 import albumsInitial, {setAlbumsToStorage} from '../data/albums'
 import photosInitial, {setPhotosToStorage} from '../data/photos'
-import postsInitial, {setPostsToStorage} from "../data/posts"
 
 import Navigation from "./Navigation";
 import Pages from "../layouts/Pages";
-
+import {getPosts} from "../store/actions/posts";
 
 export const GlobalContext = React.createContext(null)
 
-const App = () => {
+const App = ({initPosts}) => {
 
-    const [persons, setPersons] = useState(personsInitial)
-    const [activePerson, setActivePerson] = useState(+activePersonId)
-
-    const addPerson = data => {
-        const newPersons = [...persons, {...data, id: Date.now()}]
-        setPersons(newPersons)
-        setPersonsToStorage(newPersons)
-    }
-    const editPerson = person => {
-        const newPersons = [...persons]
-        const idx = newPersons.findIndex(p => p.id === person.id)
-        if (idx === -1) return false
-        newPersons.splice(idx, 1, person)
-        setPersons(newPersons)
-        setPersonsToStorage(newPersons)
-    }
-
-    const changeActivePerson = id => {
-        setActivePerson(+id)
-        setActivePersonIdToStorage(+id)
-    }
-
-    const getPersonById = (id) => {
-        const idx = persons.findIndex(person => person.id === +id)
-        if (idx === -1) {
-            return null
-        }
-        return persons[idx]
-    }
+    useEffect(()=>{
+        initPosts()
+    }, [])
 
     const [albums, setAlbums] = useState(albumsInitial)
 
@@ -51,6 +25,13 @@ const App = () => {
 
     }
 
+    const getAlbumById = id => {
+        const idx = albums.findIndex(album => album.id === id)
+        if (idx === -1) {
+            return null
+        }
+        return albums[idx]
+    }
     const [photos, setPhotos] = useState(photosInitial)
 
     const addNewPhoto = formData => {
@@ -59,66 +40,63 @@ const App = () => {
         setPhotosToStorage(newPhotos)
     }
 
-    const getAlbumById = id => {
-        const idx = albums.findIndex(album => album.id === id)
-        if (idx === -1) {
-            return null
-        }
-        return albums[idx]
+
+
+    // const doesPhotoBelongToActivePerson = (photo) => {
+    //     const album = albums.find(album => album.id === photo.albumId);
+    //     if (album === undefined) return false;
+    //     return album.personId === activePerson;
+    // }
+    //
+    // const likeRating = (id) => {
+    //     const arr = [...photos]
+    //     const photo = arr.find(photo => photo.id === id)
+    //     if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
+    //         photo.like += 1;
+    //     }
+    //     setPhotos(arr)
+    //     setPhotosToStorage(arr)
+    // }
+    // const dislikeRating = (id) => {
+    //     const arr = [...photos]
+    //     const photo = arr.find(photo => photo.id === id)
+    //     if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
+    //         photo.dislike += 1;
+    //     }
+    //     setPhotos(arr)
+    //     setPhotosToStorage(arr)
+    // }
+
+    const photoAction = (id, action) => {
+        const newPhotos = [...photos]
+        let idx = newPhotos.findIndex( p=>p.id === id)
+        if (idx ===-1) return null
+        newPhotos[idx][action]++
+        setPhotos(newPhotos)
+        setPhotosToStorage(newPhotos)
     }
 
-    const doesPhotoBelongToActivePerson = (photo) => {
-        const album = albums.find(album => album.id === photo.albumId);
-        if (album === undefined) return false;
-        return album.personId === activePerson;
-    }
-
-    const likeRating = (id) => {
-        const arr = [...photos]
-        const photo = arr.find(photo => photo.id === id)
-        if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
-            photo.like += 1;
-        }
-        setPhotos(arr)
-        setPhotosToStorage(arr)
-    }
-    const dislikeRating = (id) => {
-        const arr = [...photos]
-        const photo = arr.find(photo => photo.id === id)
-        if (photo !== undefined && !doesPhotoBelongToActivePerson(photo)) {
-            photo.dislike += 1;
-        }
-        setPhotos(arr)
-        setPhotosToStorage(arr)
-    }
-
-
-    const [posts, setPosts] = useState(postsInitial);
-
-    const addNewPost = (formData) => {
-        const newPosts = [...posts, {...formData, id: Date.now(), datetime: Date.now()}]
-        setPosts(newPosts)
-        setPostsToStorage(newPosts)
-    };
+    // const [posts, setPosts] = useState(postsInitial);
+    //
+    // const addNewPost = (formData) => {
+    //     const newPosts = [...posts, {...formData, id: Date.now(), datetime: Date.now()}]
+    //     setPosts(newPosts)
+    //     setPostsToStorage(newPosts)
+    // };
 
 
     return (
         <GlobalContext.Provider value={{
-            // addPerson,
-            // persons,
-            getPersonById,
-            // activePerson,
-            // changeActivePerson,
-            editPerson,
             albums,
             addNewAlbum,
+            getAlbumById,
             photos,
             addNewPhoto,
-            likeRating,
-            dislikeRating,
-            getAlbumById,
-            posts,
-            addNewPost
+            photoAction,
+           // likeRating,
+           // dislikeRating
+            // posts,
+            // addNewPost
 
         }}>
             <Navigation/>
@@ -128,5 +106,10 @@ const App = () => {
 }
 
 
+const mapDispatchToProps = dispatch => {
+    return {
+        initPosts: () => dispatch(getPosts())
+    }
+}
 
-export default App
+export default connect(null, mapDispatchToProps)(App)

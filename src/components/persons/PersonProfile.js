@@ -6,21 +6,24 @@ import AddAlbum from "../albums/AddAlbum";
 import PersonalAlbums from "../albums/PersonalAlbums";
 import AddPost from "../posts/AddPost"
 import PersonalBlog from "../posts/PersonalBlog"
+import {editPerson, setPersonById} from "../../store/actions/persons";
+import EditPersonForm from "./EditPersonForm";
+import {CHANGE_ADD_POST, CHANGE_EDIT_MODE} from "../../store/typesList";
 
 
-
-const PersonProfile = ({activePerson}) => {
+const PersonProfile = ({activePerson, editMode, setEditMode, setLocalPerson, person, addPostMode, setAddPostMode}) => {
 
     const {id} = useParams()
-    const {getPersonById, editPerson, addNewAlbum, addNewPost} = useContext(GlobalContext)
-    const [person, setPerson] = useState(null)
-    const [editMode, setEditMode] = useState(false)
+    const { addNewAlbum} = useContext(GlobalContext)
     const [addAlbum, setAddAlbum] = useState(false)
-    const [addPost, setAddPost] = useState(false)
 
     useEffect(() => {
-        setPerson(getPersonById(id))
+        setLocalPerson(+id)
     }, []);
+
+    useEffect(() => {
+        setLocalPerson(+id)
+    }, [editMode]);
 
     const renderProfile = () => {
         if (!person) return false
@@ -34,45 +37,9 @@ const PersonProfile = ({activePerson}) => {
         )
     }
 
-    const changeFieldHandle = (event) => {
-        setPerson({...person, [event.target.name]: event.target.value})
-    }
-
     const renderForm = () => {
         return (
-            <form onSubmit={submitFormHandle}>
-                <div className="form-group">
-                    <label>First Name</label>
-                    <input type="text" className="form-control" value={person.fName} name="fName"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <div className="form-group">
-                    <label>Last Name</label>
-                    <input type="text" className="form-control" value={person.lName} name="lName"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <div className="form-group">
-                    <label>Age</label>
-                    <input type="text" className="form-control" value={person.age} name="age"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="text" className="form-control" value={person.email} name="email"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <div className="form-group">
-                    <label>Phone</label>
-                    <input type="text" className="form-control" value={person.phone} name="phone"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <div className="form-group mb-2">
-                    <label>Avatar</label>
-                    <input type="text" className="form-control" value={person.avatar} name="avatar"
-                           onChange={changeFieldHandle}/>
-                </div>
-                <button type="submit">Save Change</button>
-            </form>
+            <EditPersonForm person={person} />
         )
     }
 
@@ -94,14 +61,9 @@ const PersonProfile = ({activePerson}) => {
         )
     }
 
-    const submitFormHandle = event => {
-        event.preventDefault()
-        editPerson(person)
-        setEditMode(false)
-    }
 
     const renderEditButton = () => {
-        if (activePerson !== person.id || editMode || addAlbum || addPost) return null
+        if (activePerson !== person.id || editMode || addAlbum || addPostMode) return null
         return (
             <div className="w-100">
                 <button onClick={editButtonHandle} className="w-100 btn btn-success my-2">Edit</button>
@@ -111,14 +73,14 @@ const PersonProfile = ({activePerson}) => {
         )
     }
 
-    const addPostButtonHandle = event => {
-        event.preventDefault()
-        setAddPost(true)
-    }
-
     const editButtonHandle = event => {
         event.preventDefault()
         setEditMode(true)
+    }
+
+    const addPostButtonHandle = event => {
+        event.preventDefault()
+        setAddPostMode()
     }
 
     const addAlbumButtonHandle = event => {
@@ -131,19 +93,17 @@ const PersonProfile = ({activePerson}) => {
         setAddAlbum(false)
     }
 
-    const addNewPostHandle = formData => {
-        addNewPost(formData)
-        setAddPost(false)
-    }
 
     const renderPersonInfo = () => {
         if (addAlbum) {
             return (<AddAlbum onFinish={addNewAlbumHandle}/>)
         }
-        if (addPost) {
-            return <AddPost onFinish={addNewPostHandle}/>;
+        if (addPostMode) {
+            return <AddPost />;
         }
-
+        if (editMode) {
+            return null
+        }
         return (<div>
             <PersonalAlbums personId={+id}/>
             <PersonalBlog personId={+id}/>
@@ -168,12 +128,20 @@ const PersonProfile = ({activePerson}) => {
 
 const mapStateToProps = state => {
     return {
-        activePerson: state.persons.activePerson
+        activePerson: +state.persons.activePerson,
+        person: state.persons.personById,
+        editMode: state.persons.editMode,
+        addPostMode: state.posts.addPostMode
     }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {}
+    return {
+        editLocalPerson: person => dispatch(editPerson(person)),
+        setLocalPerson: id => dispatch(setPersonById(id)),
+        setEditMode: () => dispatch({type: CHANGE_EDIT_MODE}),
+        setAddPostMode: () => dispatch({type: CHANGE_ADD_POST})
+    }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonProfile)
