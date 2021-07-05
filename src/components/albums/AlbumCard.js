@@ -19,7 +19,7 @@ const AlbumCard = ({album, photo}) => {
                 <img src={photo.src} alt={album.title}/>
                 <div className="card-body">
                     <h3 className="card-title">{album.title}</h3>
-                    <p className="card-text">{person.lName} {person.fName[0].toUpperCase()}.</p>
+                    <p className="card-text">{person.l_name} {person.f_name[0].toUpperCase()}.</p>
                 </div>
             </div>
         </div>

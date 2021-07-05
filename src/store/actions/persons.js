@@ -4,27 +4,72 @@ import {
     FETCH_PERSONS,
     DELETE_PERSON,
     EDIT_PERSON,
-    SET_PERSON_BY_ID
+    SET_PERSON_BY_ID,
+    CHANGE_AUTH
 } from "../typesList";
+
 import personsInitial, {activePersonId, setActivePersonIdToStorage, setPersonsToStorage} from "../../data/persons";
+import {URL} from "../utilites";
 
 export const changeActivePersonId = personId => {
     return dispatch => {
         try {
             setActivePersonIdToStorage(personId)
             dispatch(setActivePerson(personId))
-        } catch (err) {
-            console.log(err.message)
+        } catch (e) {
+            console.log(e.message)
         }
 
     }
 }
 
 export const getPersons = () => {
-    return dispatch => {
+    return async (dispatch) => {
         try {
-            const obj = getObj()
-            dispatch(fetchPersons(obj))
+            const response = await fetch(`${URL}/users`, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application-json"
+                }
+
+            })
+            const json = await response.json();
+            dispatch(fetchPersons({list: json, activePerson: null}));
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+}
+export const doSignIn = (person) => {
+    return async (dispatch) => {
+        try {
+            const response = await fetch(`${URL}/auth/signin`, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application-json"
+                },
+                body: JSON.stringify(person)
+
+            })
+            const json = await response.json();
+            localStorage.setItem("token", json.accessToken)
+            localStorage.setItem("userId", json.id)
+
+            await dispatch(changeAuth(true))
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+}
+
+export const doSignOut = () => {
+    return async (dispatch) => {
+        try {
+            await localStorage.removeItem("token")
+            await localStorage.removeItem("userId")
+            await dispatch(changeAuth(false))
         } catch (e) {
             console.log(e.message)
         }
@@ -34,8 +79,16 @@ export const getPersons = () => {
 export const addNewPerson = data => {
     return async dispatch => {
         try {
-            const person = await createPerson(data)
-            await dispatch(addPerson(person))
+            const response = await fetch(`${URL}/auth/signup`, {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application-json"
+                },
+                body: JSON.stringify(data)
+            })
+            const json = await response.json();
+            await dispatch(addPerson(json))
         } catch (e) {
             console.log(e.message)
         }
@@ -56,23 +109,53 @@ export const deletePerson = personId => {
 export const editPerson = person => {
     return async dispatch => {
         try {
-            await editPersonInServer(person)
-            await dispatch(editPersonInState(person))
+            const response = await fetch(`${URL}/users/${person.id}`, {
+                method: "PUT",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": localStorage.token
+                },
+                body: JSON.stringify(person)
+            });
+            if (response.status !== 200) {
+                return
+            }
+            const json = await response.json();
+
+            await dispatch(editPersonInState(json));
         } catch (e) {
-            console.log(e.message)
+            console.log(e.message);
         }
     }
 }
 
+
+const changeAuth = (authMode) => {
+    return {
+        type: CHANGE_AUTH,
+        payload: authMode,
+    }
+}
+
 export const setPersonById = personId => {
-    return dispatch => {
+    return async(dispatch) => {
         try {
-            dispatch(setPersonByIdInState(personId))
+            const response = await fetch(`${URL}/users/${personId}`, {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const json = await response.json();
+            await dispatch(setPersonByIdInState(json));
         } catch (e) {
-            console.log(e.message)
+            console.log(e.message);
         }
     }
 }
+
 
 const setPersonByIdInState = personId => {
     return {
@@ -117,9 +200,9 @@ const deletePersonFromState = personId => {
     }
 }
 
-//Server emulations
 
-const createPerson = data => {  //imitation of server's work , normally here is only fetch or axios
+
+const createPerson = data => {
     const newPerson = {
         ...data,
         id: Date.now()
@@ -130,7 +213,7 @@ const createPerson = data => {  //imitation of server's work , normally here is 
     return newPerson
 }
 
-const editPersonInServer = person => {
+const editPersonOnServer = person => {
     const idx = personsInitial.findIndex(p => p.id === person.id)
     if (idx === -1) return null
     personsInitial.splice(idx, 1, person)
@@ -139,7 +222,7 @@ const editPersonInServer = person => {
 
 const getObj = () => {
     return {
-        list: personsInitial,
+        list: [...personsInitial],
         activePerson: +activePersonId
     }
 }

@@ -26,7 +26,7 @@ const PersonProfile = ({activePerson, editMode, setEditMode, setLocalPerson, per
     }, [editMode]);
 
     const renderProfile = () => {
-        if (!person) return false
+        if (!person || Object.keys(person).length === 0) return false
         return (
             <div className="container">
                 <div className="card w-100">
@@ -46,10 +46,10 @@ const PersonProfile = ({activePerson, editMode, setEditMode, setLocalPerson, per
     const renderInfo = () => {
         return (
             <Fragment>
-                <img src={person.avatar} className="card-img-top" alt="{person.fName} {person.lName}"/>
+                <img src={person.avatar} className="card-img-top" alt={person.f_name + " " + person.l_name}/>
                 <div className="card-body">
                     <h3 className="card-title">
-                        {person.fName} {person.lName}
+                        {person.f_name} {person.l_name}
                     </h3>
                     <div className="card-text">
                         <p>{person.age}</p>

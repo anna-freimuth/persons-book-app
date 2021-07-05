@@ -20,12 +20,12 @@ const EditPersonForm = ({person, editLocalPerson, setEditMode}) => {
         <form onSubmit={submitFormHandle}>
             <div className="form-group">
                 <label>First Name</label>
-                <input type="text" className="form-control" value={formData.fName} name="fName"
+                <input type="text" className="form-control" value={formData.f_name} name="f_name"
                        onChange={changeFieldHandle}/>
             </div>
             <div className="form-group">
                 <label>Last Name</label>
-                <input type="text" className="form-control" value={formData.lName} name="lName"
+                <input type="text" className="form-control" value={formData.l_name} name="l_name"
                        onChange={changeFieldHandle}/>
             </div>
             <div className="form-group">

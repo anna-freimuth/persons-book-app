@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {useHistory} from 'react-router-dom'
 import {connect} from "react-redux";
 import {addNewPerson} from "../../store/actions/persons";
@@ -9,17 +9,16 @@ const AddNewPerson = ({addPerson}) => {
 
     let history = useHistory()
 
-    const { form, use } = useForm({
-        defaultValues: {fName: '', lName: '', age: '', email: '', phone: '', avatar: '' },
+    const {form, use} = useForm({
+        defaultValues: {f_name: '', l_name: '', age: '', email: '', password: '', phone: '', avatar: ''},
         onSubmit: (values) => submitHandle(values),
     });
 
     const submitHandle = values => {
-        console.log( values )
         addPerson(values)
-        history.push('/persons')
+        history.push('/signin')
     }
-    const errors = use("errors", { errorWithTouched: true })
+    const errors = use("errors", {errorWithTouched: true})
 
     return (
         <div className="container">
@@ -27,19 +26,19 @@ const AddNewPerson = ({addPerson}) => {
                 <form ref={form} noValidate>
                     <InputField
                         type="text"
-                        name="fName"
-                        id="fName"
+                        name="f_name"
+                        id="f_name"
                         label="First Name"
                         required
-                        error={errors.fName}
+                        error={errors.f_name}
                     />
                     <InputField
                         type="text"
-                        name="lName"
-                        id="lName"
+                        name="l_name"
+                        id="l_name"
                         label="Last Name"
                         required
-                        error={errors.lName}
+                        error={errors.l_name}
                     />
                     <InputField
                         type="text"
@@ -56,6 +55,14 @@ const AddNewPerson = ({addPerson}) => {
                         label="Email"
                         required
                         error={errors.email}
+                    />
+                    <InputField
+                        type="password"
+                        name="password"
+                        id="password"
+                        label="Password"
+                        required
+                        error={errors.password}
                     />
                     <InputField
                         type="text"
@@ -84,7 +91,7 @@ const AddNewPerson = ({addPerson}) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        addNewPerson: (person) => dispatch(addNewPerson(person))
+        addPerson: (person) => dispatch(addNewPerson(person))
     }
 }
 export default connect(null, mapDispatchToProps)(AddNewPerson)
