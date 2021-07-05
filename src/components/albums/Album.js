@@ -24,7 +24,7 @@ const Album = () => {
         return (
             <div className="container">
                 <h1>{album.title}</h1>
-                <h2>by {person.lName} {person.fName}</h2>
+                <h2>by {person.l_name} {person.f_name}</h2>
                 <div className="row">
                     {albumPhotos.map(photo => <PhotoCard key={photo.id} photo={photo}/>)}
                 </div>
