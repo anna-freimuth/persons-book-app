@@ -1,10 +1,12 @@
 import React, {useState} from "react"
 import {connect} from "react-redux"
+import { CHANGE_ADD_ALBUM } from "../../store/typesList";
+import { addAlbum } from "../../store/actions/albums";
 
-const AddAlbum = ({onFinish,activePerson}) => {
+const AddAlbum = ({addLocalAlbum, setAddAlbumMode}) => {
 
     const [formData, setFormData] = useState({
-        personId: activePerson,
+        person_id: +localStorage.userId,
         title: ''
     })
 
@@ -13,8 +15,9 @@ const AddAlbum = ({onFinish,activePerson}) => {
     }
 
     const onSubmit = event => {
-        event.preventDefault()
-        onFinish(formData)
+        event.preventDefault();
+        addLocalAlbum(formData);
+        setAddAlbumMode();
     }
 
     return (
@@ -31,7 +34,14 @@ const AddAlbum = ({onFinish,activePerson}) => {
 }
 const mapStateToProps = state => {
     return {
-        activePerson: state.persons.activePerson
+       // activePerson: state.persons.activePerson
     }
 }
-export default connect(mapStateToProps, null)(AddAlbum)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setAddAlbumMode: () => dispatch({ type: CHANGE_ADD_ALBUM }),
+        addLocalAlbum: (album) => dispatch(addAlbum(album)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddAlbum);

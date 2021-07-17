@@ -1,12 +1,13 @@
-import React, {useState} from "react";
-import {connect} from "react-redux";
-import {CHANGE_ADD_POST} from "../../store/typesList";
-import {addPost} from "../../store/actions/posts";
+import React, { useState, useContext } from "react";
+import { connect } from "react-redux";
 
-const AddPost = ({activePerson, addLocalPost, setAddPostMode}) => {
+import { CHANGE_ADD_POST } from "../../store/typesList";
 
+import { addPost } from "../../store/actions/posts";
+
+const AddPost = ({ activePerson, addLocalPost, setAddPostMode }) => {
     const [formData, setFormData] = useState({
-        personId: activePerson,
+        person_id: activePerson,
         title: "",
         short: "",
         body: "",
@@ -21,10 +22,9 @@ const AddPost = ({activePerson, addLocalPost, setAddPostMode}) => {
 
     return (
         <form
-            onSubmit={event => {
-                event.preventDefault()
-                addLocalPost(formData)
-                setAddPostMode()
+            onSubmit={() => {
+                addLocalPost(formData);
+                setAddPostMode();
             }}
         >
             <div className="form-group">
@@ -57,18 +57,17 @@ const AddPost = ({activePerson, addLocalPost, setAddPostMode}) => {
     );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
-        activePerson: state.persons.activePerson
-    }
-}
+        // activePerson: state.persons.activePerson,
+    };
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
     return {
-        setAddPostMode: () => dispatch({type: CHANGE_ADD_POST}),
-        addLocalPost: post => dispatch(addPost(post))
-    }
-}
+        setAddPostMode: () => dispatch({ type: CHANGE_ADD_POST }),
+        addLocalPost: (post) => dispatch(addPost(post)),
+    };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddPost)
-
+export default connect(mapStateToProps, mapDispatchToProps)(AddPost);

@@ -1,13 +1,14 @@
 import React from 'react'
 import {Switch, Route} from 'react-router-dom'
-import AddNewPerson from "../components/auth/AddNewPerson";
-import Home from "../components/home/Home";
-import Persons from "../components/persons/Persons";
-import PersonProfile from "../components/persons/PersonProfile";
-import Albums from "../components/albums/Albums";
-import Album from "../components/albums/Album";
-import SignIn from "../components/auth/SignIn";
-
+import AddNewPerson from "../components/Auth/AddNewPerson";
+import Home from "../components/Home/Home";
+import Persons from "../components/Persons/Persons";
+import PersonProfile from "../components/Persons/PersonProfile";
+import Albums from "../components/Albums/Albums";
+import Album from "../components/Albums/Album";
+import SignIn from "../components/Auth/SignIn";
+import Posts from "../components/Posts/Posts";
+import Post from "../components/Posts/Post";
 
 const Pages = () => {
     return(
@@ -18,7 +19,7 @@ const Pages = () => {
             <Route exact={true} path="/persons">
                 <Persons />
             </Route>
-            <Route path="/persons/signup">
+            <Route path="/signup">
                 <AddNewPerson />
             </Route>
             <Route path="/signin">
@@ -32,6 +33,12 @@ const Pages = () => {
             </Route>
             <Route path="/albums/:id">
                 <Album />
+            </Route>
+            <Route exact path="/posts">
+                <Posts />
+            </Route>
+            <Route exact path="/posts/:id">
+                <Post />
             </Route>
         </Switch>
     )

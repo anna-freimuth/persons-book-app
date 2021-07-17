@@ -2,7 +2,7 @@ import React from 'react'
 import {useHistory} from 'react-router-dom'
 import {connect} from "react-redux";
 import {addNewPerson} from "../../store/actions/persons";
-import InputField from "../form/InputField";
+import InputField from "../Form/InputField";
 import {useForm} from "react-cool-form"
 
 const AddNewPerson = ({addPerson}) => {

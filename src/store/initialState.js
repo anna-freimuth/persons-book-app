@@ -1,15 +1,27 @@
 const InitialState = {
     persons: {
         list: [],
-        isAuth: false,
+        isAuth: localStorage.token ? true : false,
         activePerson: null,
         editMode: false,
-        personById: {}
+        personById: null,
     },
+
     posts: {
         list: [],
-        addPostMode: false
-    }
-}
+        addPostMode: false,
+        postById: null,
+    },
+
+    albums: {
+        list: [],
+        addAlbumMode: false,
+        albumById: null,
+    },
+
+    photos: {
+        list: [],
+    },
+};
 
 export default InitialState

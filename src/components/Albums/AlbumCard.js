@@ -1,10 +1,8 @@
-import React, {useContext} from 'react'
+import React from 'react'
 import {useHistory} from 'react-router-dom'
-import {GlobalContext} from "../App"
 
 const AlbumCard = ({album, photo}) => {
-    const {getPersonById} = useContext(GlobalContext)
-    const person = getPersonById(album.personId)
+
 
     let history = useHistory()
 
@@ -19,7 +17,8 @@ const AlbumCard = ({album, photo}) => {
                 <img src={photo.src} alt={album.title}/>
                 <div className="card-body">
                     <h3 className="card-title">{album.title}</h3>
-                    <p className="card-text">{person.l_name} {person.f_name[0].toUpperCase()}.</p>
+                    <p className="card-text">
+                    { album.person ? `${album.person.l_name} ${album.person.f_name[0].toUpperCase()}` : "No Name" }</p>
                 </div>
             </div>
         </div>
