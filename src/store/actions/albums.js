@@ -136,4 +136,5 @@ const addAlbumInServer = (album) => {
     albumsInitial.push(newAlbum);
     setAlbumsToStorage(albumsInitial);
     return newAlbum;
-};
+}
+

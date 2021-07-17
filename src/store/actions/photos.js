@@ -44,6 +44,8 @@ export const addPhoto = (photo) => {
 export const addLikeToPhoto = (id) => {
     return async(dispatch, getState) => {
         const photo = getState().photos.list.find((photo) => photo.id === id);
+        // const obj = {}
+        // obj["like"] = photo.like+1
         try {
             const response = await fetch(`${URL}/photos/${photo.id}`, {
                 method: "PUT",
@@ -69,6 +71,8 @@ export const addLikeToPhoto = (id) => {
 export const addDislikeToPhoto = (id) => {
     return async(dispatch, getState) => {
         const photo = getState().photos.list.find((photo) => photo.id === id);
+        // const obj = {}
+        // obj["like"] = photo.like+1
         try {
             const response = await fetch(`${URL}/photos/${photo.id}`, {
                 method: "PUT",

@@ -1,14 +1,14 @@
-import React from "react";
-import {connect} from "react-redux";
+import React, {useEffect} from "react";
+import {connect, useDispatch} from "react-redux";
+import {getPosts, setPostsByPersonId} from "../../store/actions/posts";
 
-const PersonalBlog = ({ personId,posts }) => {
+const PersonalBlog = ({ personalPosts }) => {
 
-    const personalPosts = posts.filter((p) => p.personId === personId);
     const renderBlog = () => {
-        if (!personalPosts.length) {
-            return <h3>No blogs yet...</h3>;
+        if (!personalPosts?.length) {
+            return <h3>No posts yet...</h3>;
         }
-        return posts.map((post) => (
+        return personalPosts.map((post) => (
             <div key={post.id} className="card">
                 <div className="card-body">
                     <h3 className="card-title">{post.title}</h3>
@@ -22,7 +22,7 @@ const PersonalBlog = ({ personId,posts }) => {
 
 const mapStateToProps = state => {
     return {
-        posts: state.posts.list
+        personalPosts: state.posts.list
     }
 }
 

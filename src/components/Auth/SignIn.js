@@ -2,10 +2,10 @@ import React from 'react'
 import {useHistory} from 'react-router-dom'
 import {connect} from "react-redux";
 import {doSignIn} from "../../store/actions/persons";
-import InputField from "../form/InputField";
+import InputField from "../Form/InputField";
 import {useForm} from "react-cool-form"
 
-const SignIn = ({signIn}) => {
+const SignIn = ({signin}) => {
 
     let history = useHistory()
 
@@ -14,9 +14,9 @@ const SignIn = ({signIn}) => {
         onSubmit: (values) => submitHandle(values),
     });
 
-    const submitHandle = values => {
-        signIn(values)
-        history.push('/persons')
+    const submitHandle = async values => {
+        await signin(values);
+        history.push("/persons");
     }
     const errors = use("errors", {errorWithTouched: true})
 
@@ -24,8 +24,6 @@ const SignIn = ({signIn}) => {
         <div className="container">
             <div className="w-50 mx-auto">
                 <form ref={form} noValidate>
-
-
 
                     <InputField
                         type="email"
@@ -55,7 +53,7 @@ const SignIn = ({signIn}) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        signIn: (person) => dispatch(doSignIn(person))
+        signin: (person) => dispatch(doSignIn(person))
     }
 }
 export default connect(null, mapDispatchToProps)(SignIn)

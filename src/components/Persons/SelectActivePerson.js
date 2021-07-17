@@ -14,12 +14,12 @@ const SelectActivePerson = ({persons, activePerson, getPersonsObject, changeActi
 
     }
 
-    return (
-        <select onChange={changeSelectValue} defaultValue={activePerson}>
+    return persons.length ? (
+        <select onChange={changeSelectValue} defaultValue={activePerson || null}>
             <option value="-1">Choose a user</option>
             {persons.map(p => (<option key={p.id} value={p.id}>{p.f_name} {p.l_name}</option>))}
         </select>
-    )
+    ): null
 }
 
 const mapStateToProps = state => {
